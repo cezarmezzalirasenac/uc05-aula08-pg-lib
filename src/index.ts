@@ -1,13 +1,8 @@
 import Scanner from "@codeea/scanner";
-import pgp from "pg-promise";
+import { Database } from "./database";
 
 const scanner = new Scanner();
-
-// Criar um objeto de conexão com o banco
-const connectionString =
-  "postgres://postgres:password@localhost:5432/matriculas_db";
-
-const connection = pgp()(connectionString);
+const database = new Database();
 
 async function main() {
   // CRUD
@@ -33,7 +28,7 @@ async function main() {
     comando = await scanner.questionInt("Informe o comando:");
     switch (comando) {
       case 10:
-        createAluno();
+        await createAluno();
         break;
 
       default:
@@ -72,7 +67,7 @@ async function createAluno() {
     const [dia, mes, ano] = dataNascimento.split("/");
     const dataNascimentoISO = new Date(`${mes}/${dia}/${ano}`).toUTCString();
     // Insere os dados no banco
-    await connection.query(queryInsertAlunos, [
+    await database.query(queryInsertAlunos, [
       nome,
       dataNascimentoISO,
       cpf,
@@ -86,7 +81,10 @@ async function createAluno() {
 
     // SAÍDA
     // Busca os dados no banco
-    const results = await connection.query("select id, nome, cpf from alunos");
+    const results = await database.query(
+      "select id, nome, cpf from alunos",
+      []
+    );
 
     // Imprime os dados
     console.log(results);
@@ -99,4 +97,5 @@ async function createAluno() {
 (async () => {
   await main();
   scanner.close();
+  await database.closeConnection();
 })();
