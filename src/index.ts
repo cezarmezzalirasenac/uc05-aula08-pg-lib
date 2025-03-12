@@ -1,11 +1,15 @@
 import Scanner from "@codeea/scanner";
 import { Database } from "./database";
 import { AlunoRepository } from "./repository/aluno.repository";
-import { Aluno } from "./model/Aluno";
+import { AlunoService } from "./service/aluno.service";
+import { AlunoController } from "./controller/aluno.controller";
+
 
 const scanner = new Scanner();
 const database = new Database();
 const alunoRepository = new AlunoRepository(database);
+const alunoService = new AlunoService(alunoRepository);
+const alunoController = new AlunoController(alunoService);
 
 async function main() {
   // CRUD
@@ -33,7 +37,7 @@ async function main() {
     comando = await scanner.questionInt("Informe o comando:");
     switch (comando) {
       case 10:
-        await createAluno();
+        await alunoController.createAluno();
         break;
       // case 11:
       //   await getAlunos();
