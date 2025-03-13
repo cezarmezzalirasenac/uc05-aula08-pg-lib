@@ -32,7 +32,52 @@ export class AlunoRepository {
     };
   }
 
-  async getAll(): Promise<[]> {
-    return await this.database.query("select id, nome, cpf from alunos", []);
+  async getAll(): Promise<Aluno[]> {
+    const result = await this.database.query(
+      `select nome, data_nascimento, cpf,
+           telefone, sexo, email, escolaridade,
+           renda, pcd
+       from alunos`,
+      []
+    );
+    if (result.length === 0) {
+      return [];
+    }
+    return result.map((aluno: any) => ({
+      id: aluno.id,
+      nome: aluno.nome,
+      dataNascimento: aluno.data_nascimento,
+      cpf: aluno.cpf,
+      telefone: aluno.telefone,
+      sexo: aluno.sexo,
+      email: aluno.email,
+      escolaridade: aluno.escolaridade,
+      renda: aluno.renda,
+      pcd: aluno.pcd,
+    }));
+  }
+
+  async getById(id: number): Promise<Aluno | undefined> {
+    const result = await this.database.one(
+      `select nome, data_nascimento, cpf,
+           telefone, sexo, email, escolaridade,
+           renda, pcd
+       from alunos
+       where id = $1`,
+      [id]
+    );
+    if (!result) return;
+    return {
+      id: result.id,
+      nome: result.nome,
+      dataNascimento: result.data_nascimento,
+      cpf: result.cpf,
+      telefone: result.telefone,
+      sexo: result.sexo,
+      email: result.email,
+      escolaridade: result.escolaridade,
+      renda: result.renda,
+      pcd: result.pcd,
+    };
   }
 }
