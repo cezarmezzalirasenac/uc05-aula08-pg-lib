@@ -10,7 +10,7 @@ export class AlunoController {
   }
 
   // CRUD - (C)reate
-  public createAluno = async (req: Request<{}, {}, Aluno>, res: Response) => {
+  async createAluno(req: Request<{}, {}, Aluno>, res: Response) {
     try {
       // ENTRADA
       const aluno = req.body;
@@ -23,10 +23,10 @@ export class AlunoController {
       console.log("Error - AlunoController>createAluno", error);
       res.status(500).send({ error: true, message: error });
     }
-  };
+  }
 
   // CRUD - (R)etrieve
-  public getAlunos = async (_: Request, res: Response) => {
+  async getAlunos(_: Request, res: Response) {
     try {
       // Busca os dados no banco
       const alunos = await this.service.getAll();
@@ -36,9 +36,9 @@ export class AlunoController {
       console.log("Error - AlunoController>getAlunos", error);
       res.status(500).send({ error: true, message: error });
     }
-  };
+  }
 
-  public getAlunoById = async (req: Request<{ id: string }>, res: Response) => {
+  async getAlunoById(req: Request<{ id: string }>, res: Response) {
     try {
       const { id } = req.params;
       if (!id) {
@@ -64,7 +64,7 @@ export class AlunoController {
       console.log("Error - AlunoController>getAlunoById", error);
       res.status(500).send({ error: true, message: error });
     }
-  };
+  }
 
   // // CRUD - (U)pdate
   // async updateAluno() {

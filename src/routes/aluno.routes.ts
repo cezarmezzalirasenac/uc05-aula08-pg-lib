@@ -22,9 +22,15 @@ export class AlunoRoutes {
 
   // Cria o repositorio, service, controller e rotas do aluno
   configureRoutes(): void {
-    this.router.post("/", this.alunoController.createAluno);
-    this.router.get("/", this.alunoController.getAlunos);
-    this.router.get("/:id", this.alunoController.getAlunoById);
+    this.router.post("/", (req, res) =>
+      this.alunoController.createAluno(req, res)
+    );
+    this.router.get("/", (req, res) =>
+      this.alunoController.getAlunos(req, res)
+    );
+    this.router.get("/:id", (req, res) =>
+      this.alunoController.getAlunoById(req, res)
+    );
     // this.router.put("/:id", this.alunoController.updateAluno);
     // this.router.delete("/:id", this.alunoController.deleteAluno);
   }
