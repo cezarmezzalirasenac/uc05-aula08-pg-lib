@@ -10,40 +10,61 @@ export class AlunoController {
   }
 
   // CRUD - (C)reate
-  async createAluno(req: Request<{}, {}, Aluno>, res: Response) {
+  public createAluno = async (req: Request<{}, {}, Aluno>, res: Response) => {
     try {
       // ENTRADA
       const aluno = req.body;
       // PROCESSAMENTO
       const novoAluno = await this.service.createAluno(aluno);
       // SAÍDA
-      res.status(200).send(novoAluno);
+      res.status(201).send(novoAluno);
     } catch (error) {
       // Imprime o erro
-      console.log(error);
+      console.log("Error - AlunoController>createAluno", error);
+      res.status(500).send({ error: true, message: error });
     }
-  }
+  };
 
   // CRUD - (R)etrieve
-  // async getAlunos() {
-  //   // Busca os dados no banco
-  //   // TODO
-  //   const results = await alunoRepository.getAll();
+  public getAlunos = async (_: Request, res: Response) => {
+    try {
+      // Busca os dados no banco
+      const alunos = await this.service.getAll();
+      // Retorna os dados
+      res.status(200).send(alunos);
+    } catch (error) {
+      console.log("Error - AlunoController>getAlunos", error);
+      res.status(500).send({ error: true, message: error });
+    }
+  };
 
-  //   // Imprime os dados
-  //   console.log(results);
-  // }
+  public getAlunoById = async (req: Request<{ id: string }>, res: Response) => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        res.status(400).send({ error: true, message: "Informe o ID do aluno" });
+        return;
+      }
+      const alunoId = parseInt(id);
+      if (isNaN(alunoId)) {
+        res.status(400).send({ error: true, message: "Informe um ID válido" });
+        return;
+      }
 
-  // async getAlunoById(id: Number): Promise<any> {
-  //   // Busca os dados no banco
-  //   // TODO
-  //   const results = await database.query("select * from alunos where id = $1", [
-  //     id,
-  //   ]);
+      // Busca os dados no banco
+      const aluno = await this.service.getById(alunoId);
+      if (!aluno) {
+        res.status(404).send({ error: true, message: "Aluno não encontrado" });
+        return;
+      }
 
-  //   // Imprime os dados
-  //   console.log(results);
-  // }
+      // Retorna os dados
+      res.status(200).send(aluno);
+    } catch (error) {
+      console.log("Error - AlunoController>getAlunoById", error);
+      res.status(500).send({ error: true, message: error });
+    }
+  };
 
   // // CRUD - (U)pdate
   // async updateAluno() {

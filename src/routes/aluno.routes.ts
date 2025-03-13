@@ -7,18 +7,26 @@ export class AlunoRoutes {
   private database: any;
   private router: Router;
 
+  private alunoRepository: AlunoRepository;
+  private alunoService: AlunoService;
+  private alunoController: AlunoController;
+
   constructor(database: any) {
     this.database = database;
+    this.alunoRepository = new AlunoRepository(this.database);
+    this.alunoService = new AlunoService(this.alunoRepository);
+    this.alunoController = new AlunoController(this.alunoService);
     this.router = express.Router();
     this.configureRoutes();
   }
 
   // Cria o repositorio, service, controller e rotas do aluno
   configureRoutes(): void {
-    const alunoRepository = new AlunoRepository(this.database);
-    const alunoService = new AlunoService(alunoRepository);
-    const alunoController = new AlunoController(alunoService);
-    this.router.post("/", alunoController.createAluno);
+    this.router.post("/", this.alunoController.createAluno);
+    this.router.get("/", this.alunoController.getAlunos);
+    this.router.get("/:id", this.alunoController.getAlunoById);
+    // this.router.put("/:id", this.alunoController.updateAluno);
+    // this.router.delete("/:id", this.alunoController.deleteAluno);
   }
 
   getRouter(): Router {
