@@ -1,59 +1,23 @@
-import Scanner from "@codeea/scanner";
 import { Aluno } from "../model/aluno";
 import { AlunoService } from "../service/aluno.service";
+import { Request, Response } from "express";
 
 export class AlunoController {
-  private scanner: Scanner;
   private service: AlunoService;
 
   constructor(service: AlunoService) {
-    this.scanner = new Scanner();
     this.service = service;
   }
 
-  private async inputDataAluno(): Promise<Aluno> {
-    const nome = await this.scanner.question("Nome Completo: ");
-    const dataNascimento = await this.scanner.question(
-      "Data Nascimento (ex: 12/11/1990): "
-    );
-    const cpf = await this.scanner.question("CPF: ");
-    const telefone = await this.scanner.question("Telefone: ");
-    const sexo = await this.scanner.question("Sexo (M-Masculino/F-Feminino): ");
-    const email = await this.scanner.question("Email: ");
-    const escolaridade = await this.scanner.question("Nível Escolaridade: ");
-    const renda = await this.scanner.questionFloat("Renda: ");
-    const pcd = await this.scanner.question("É PCD? (S-Sim/N-Não): ");
-
-    const [dia, mes, ano] = dataNascimento.split("/");
-
-    return {
-      nome,
-      dataNascimento: new Date(`${mes}/${dia}/${ano}`),
-      cpf,
-      telefone,
-      sexo: sexo.charAt(0),
-      email,
-      escolaridade,
-      renda,
-      pcd: pcd.toUpperCase() === "S",
-    };
-  }
-
   // CRUD - (C)reate
-  async createAluno() {
+  async createAluno(req: Request<{}, {}, Aluno>, res: Response) {
     try {
-      // Usando o scanner, vamos obter os dados do aluno para inserir
-
       // ENTRADA
-      console.log("A seguir, informe os dados do aluno: \n");
-      const aluno = await this.inputDataAluno();
-
+      const aluno = req.body;
       // PROCESSAMENTO
-      // TODO
       const novoAluno = await this.service.createAluno(aluno);
-
       // SAÍDA
-      console.log(novoAluno);
+      res.status(200).send(novoAluno);
     } catch (error) {
       // Imprime o erro
       console.log(error);
