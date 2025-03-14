@@ -7,7 +7,7 @@ export class AlunoRepository {
     this.database = database;
   }
 
-  async createAluno(aluno: Aluno): Promise<Aluno> {
+  async create(aluno: Aluno): Promise<Aluno> {
     const queryInsertAlunos = `
       insert into alunos (nome, data_nascimento, cpf,
         telefone, sexo, email, escolaridade, renda, pcd)
@@ -58,7 +58,7 @@ export class AlunoRepository {
   }
 
   async getById(id: number): Promise<Aluno | undefined> {
-    const result = await this.database.one(
+    const [result] = await this.database.query(
       `select nome, data_nascimento, cpf,
            telefone, sexo, email, escolaridade,
            renda, pcd
@@ -68,7 +68,7 @@ export class AlunoRepository {
     );
     if (!result) return;
     return {
-      id: result.id,
+      id,
       nome: result.nome,
       dataNascimento: result.data_nascimento,
       cpf: result.cpf,
@@ -79,5 +79,93 @@ export class AlunoRepository {
       renda: result.renda,
       pcd: result.pcd,
     };
+  }
+
+  async updateAluno(id: number, aluno: Aluno): Promise<void> {
+    try {
+      // Monta a query de update
+      const statementUpdateAluno = `
+        update alunos set
+          nome = $1,
+          data_nascimento = $2,
+          cpf = $3,
+          telefone = $4,
+          sexo = $5,
+          email = $6,
+          escolaridade = $7,
+          renda = $8,
+          pcd = $9
+        where id = $10
+      `;
+      await this.database.query(statementUpdateAluno, [
+        aluno.nome,
+        aluno.dataNascimento,
+        aluno.cpf,
+        aluno.telefone,
+        aluno.sexo,
+        aluno.email,
+        aluno.escolaridade,
+        aluno.renda,
+        aluno.pcd,
+        id,
+      ]);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updatePartOfAluno(id: number, aluno: Aluno): Promise<void> {
+    try {
+      // Obter os dados do aluno do banco
+      const saved = await this.getById(id);
+      if (!saved) {
+        throw new Error("Aluno não encontrado");
+      }
+
+      let alunoParams: Aluno = {} as Aluno;
+
+      // Nome
+      alunoParams.nome = saved.nome !== aluno.nome ? aluno.nome : saved.nome;
+      // DataNascimento
+      alunoParams.dataNascimento =
+        saved.dataNascimento !== aluno.dataNascimento
+          ? aluno.dataNascimento
+          : saved.dataNascimento;
+      // CPF
+      alunoParams.cpf = saved.cpf !== aluno.cpf ? aluno.cpf : saved.cpf;
+      // Telefone
+      aluno.telefone =
+        saved.telefone !== aluno.telefone ? aluno.telefone : saved.telefone;
+      // Sexo
+      alunoParams.sexo = saved.sexo !== aluno.sexo ? aluno.sexo : saved.sexo;
+      // Email
+      alunoParams.email =
+        saved.email !== aluno.email ? aluno.email : saved.email;
+      // Escolaridade
+      alunoParams.escolaridade =
+        saved.escolaridade !== aluno.escolaridade
+          ? aluno.escolaridade
+          : saved.escolaridade;
+      // Renda
+      alunoParams.renda =
+        saved.renda !== aluno.renda ? aluno.renda : saved.renda;
+      // PCD
+      alunoParams.pcd = saved.pcd !== aluno.pcd ? aluno.pcd : saved.pcd;
+
+      this.updateAluno(id, alunoParams);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async delete(id: number) {
+    const aluno = await this.getById(id);
+
+    if (!aluno) {
+      throw new Error("Aluno não encontrado");
+    }
+    // Monta a query de exclusão
+    const statementDeleteAlunos = `delete from alunos where id = $1`;
+    await this.database.query(statementDeleteAlunos, [id]);
   }
 }

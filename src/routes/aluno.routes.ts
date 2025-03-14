@@ -31,8 +31,15 @@ export class AlunoRoutes {
     this.router.get("/:id", (req, res) =>
       this.alunoController.getAlunoById(req, res)
     );
-    // this.router.put("/:id", this.alunoController.updateAluno);
-    // this.router.delete("/:id", this.alunoController.deleteAluno);
+    this.router.put("/:id", (req, res) =>
+      this.alunoController.updateAllFieldsAluno(req, res)
+    );
+    this.router.patch("/:id", (req, res) =>
+      this.alunoController.updatePartOfAluno(req, res)
+    );
+    this.router.delete("/:id", (req, res) =>
+      this.alunoController.deleteAluno(req, res)
+    );
   }
 
   getRouter(): Router {
