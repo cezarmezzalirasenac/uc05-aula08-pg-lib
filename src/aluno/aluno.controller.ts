@@ -1,4 +1,4 @@
-import { Aluno } from "../shared/model/aluno";
+import { Aluno } from "../shared/model/aluno.model";
 import { AlunoService } from "./aluno.service";
 import { Request, Response } from "express";
 
