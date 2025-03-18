@@ -3,7 +3,7 @@ import { AlunoController } from "./aluno.controller";
 import { AlunoRepository } from "./aluno.repository";
 import { AlunoService } from "./aluno.service";
 
-export class AlunoRoutes {
+export class AlunoRouter {
   private database: any;
   private router: Router;
 

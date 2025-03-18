@@ -1,6 +1,6 @@
 import express, { Express, Response } from "express";
 import cors from "cors";
-import { AlunoRoutes } from "./aluno/aluno.routes";
+import { AlunoRouter } from "./aluno/aluno.router";
 import { Database } from "./shared/database";
 import { InstrutorRoutes } from "./instrutor/instrutor.routes";
 
@@ -27,10 +27,10 @@ class App {
       res.send({ status: "OK" });
     });
 
-    const alunoRoutes = new AlunoRoutes(this.database);
+    const alunoRouter = new AlunoRouter(this.database);
     const instrutorRoutes = new InstrutorRoutes(this.database);
 
-    this._app.use("/alunos", alunoRoutes.getRouter());
+    this._app.use("/alunos", alunoRouter.getRouter());
     this._app.use("/instrutores", instrutorRoutes.getRouter())
   }
 
