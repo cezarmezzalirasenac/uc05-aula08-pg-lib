@@ -148,8 +148,6 @@ export class AlunoController {
         res.status(400).send({ error: true, message: "Informe um ID válido" });
         return;
       }
-      // Pegar os dados do aluno
-      const aluno = req.body;
       // Chama o service para atualizar o aluno
       await this.service.deleteAluno(alunoId);
       res.status(200).send();
