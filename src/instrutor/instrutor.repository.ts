@@ -7,11 +7,31 @@ export class InstrutorRepository {
     this.database = database;
   }
 
-  async create(instrutor: Instrutor) {
+  async create(instrutor: Instrutor): Promise<Instrutor> {
     const statementInsert = `
       INSERT INTO public.instrutores
-      (id, nome, cpf, data_nascimento, matricula, sexo, email, data_admissao, data_desligamento)
-      VALUES(0, '', '', '', '', '', '', '', '');`;
+        (nome, cpf, data_nascimento,
+        matricula, sexo, email,
+        data_admissao, data_desligamento)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+       RETURNING id;
+    `;
+
+    const result = await this.database.one(statementInsert, [
+      instrutor.nome,
+      instrutor.cpf,
+      instrutor.data_nascimento,
+      instrutor.matricula,
+      instrutor.sexo,
+      instrutor.email,
+      instrutor.data_admissao,
+      instrutor.data_desligamento,
+    ]);
+
+    return {
+      id: result.id,
+      ...instrutor,
+    };
   }
 
   async getAll(): Promise<Instrutor[]> {

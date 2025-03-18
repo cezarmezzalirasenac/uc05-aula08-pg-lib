@@ -9,6 +9,13 @@ export class InstrutorService {
   }
 
   async getAll(): Promise<Instrutor[]> {
-    return this.repository.getAll()
+    return this.repository.getAll();
+  }
+
+  async create(instrutor: Instrutor): Promise<Instrutor | void> {
+    if (!instrutor.cpf) {
+      throw new Error("CPF Inválido");
+    }
+    return await this.repository.create(instrutor)
   }
 }

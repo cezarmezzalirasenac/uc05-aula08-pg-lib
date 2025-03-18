@@ -22,7 +22,7 @@ export class InstrutorRoutes {
 
   private configureRoutes() {
     this.router.get("/", (req, res) => this.controller.getAll(req, res));
-    this.router.post("/", (req, res) => {});
+    this.router.post("/", (req, res) => this.controller.create(req, res));
     this.router.patch("/", (req, res) => {});
     this.router.delete("/", (req, res) => {});
   }
