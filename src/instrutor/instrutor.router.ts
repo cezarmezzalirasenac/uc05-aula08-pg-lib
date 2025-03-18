@@ -3,7 +3,7 @@ import { InstrutorRepository } from "./instrutor.repository";
 import { InstrutorService } from "./instrutor.service";
 import { InstrutorController } from "./instrutor.controller";
 
-export class InstrutorRoutes {
+export class InstrutorRouter {
   private database: any;
   private router: Router;
 
