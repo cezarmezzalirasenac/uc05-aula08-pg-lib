@@ -15,4 +15,8 @@ export class CursoService {
   async getAll(): Promise<Curso[]> {
     return this.repository.getAll();
   }
+
+  async getById(id: number): Promise<Curso | null> {
+    return await this.repository.getById(id);
+  }
 }

@@ -18,4 +18,8 @@ export class InstrutorService {
     }
     return await this.repository.create(instrutor)
   }
+
+  async getById(id: number): Promise<Instrutor | null> {
+    return await this.repository.getById(id);
+  }
 }

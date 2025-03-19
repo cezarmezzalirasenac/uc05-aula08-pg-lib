@@ -56,4 +56,17 @@ export class CursoRepository {
       return { ...curso };
     });
   }
+
+  async getById(id: number): Promise<Curso | null> {
+    const statementSelectOne = `
+      SELECT
+        id, nome, carga_horaria,
+        valor, conteudo, codigo_curso,
+        data_publicado, area_conhecimento, ativo
+      FROM public.cursos
+      WHERE id = $1
+    `;
+    const [curso] = await this.database.query(statementSelectOne, [id]);
+    return curso || null;
+  }
 }

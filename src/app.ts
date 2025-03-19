@@ -4,6 +4,10 @@ import { AlunoRouter } from "./aluno/aluno.router";
 import { Database } from "./shared/database";
 import { InstrutorRouter } from "./instrutor/instrutor.router";
 import { CursoRouter } from "./curso/curso.router";
+import { TurmaRouter } from "./turma/turma.router";
+import { CursoRepository } from "./curso/curso.repository";
+import { CursoService } from "./curso/curso.service";
+import { CursoController } from "./curso/curso.controller";
 
 class App {
   private readonly PORT = 3000;
@@ -28,12 +32,19 @@ class App {
       res.send({ status: "OK" });
     });
 
+    const cursoRepository = new CursoRepository(this.database);
+    const cursoService = new CursoService(cursoRepository);
+    const cursoController = new CursoController(cursoService);
+
     const alunoRouter = new AlunoRouter(this.database);
     const instrutorRouter = new InstrutorRouter(this.database);
     const cursoRouter = new CursoRouter(this.database);
 
+    const turmaRouter = new TurmaRouter();
+
     this._app.use("/alunos", alunoRouter.getRouter());
     this._app.use("/instrutores", instrutorRouter.getRouter());
+    this._app.use("/cursos", cursoRouter.getRouter());
     this._app.use("/cursos", cursoRouter.getRouter());
   }
 

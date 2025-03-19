@@ -50,4 +50,17 @@ export class InstrutorRepository {
       return { ...instrutor };
     });
   }
+
+  async getById(id: number): Promise<Instrutor | null> {
+    const statementSelectOne = `
+      SELECT
+        id, nome, cpf,
+        data_nascimento, matricula, sexo,
+        email, data_admissao, data_desligamento
+      FROM public.instrutores
+    WHERE id = $1
+    `;
+    const [instrutor] = await this.database.query(statementSelectOne, [id]);
+    return instrutor || null;
+  }
 }
