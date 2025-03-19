@@ -1,5 +1,5 @@
 export type Turma = {
-  id: number;
+  id?: number;
   codigo_turma: string;
   carga_horaria: string;
   valor: number;

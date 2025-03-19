@@ -8,13 +8,34 @@ export class TurmaRepository {
   }
 
   async create(turma: Turma): Promise<Turma> {
-    const statamentInsert = `
-      INSERT INTO public.turmas
-        (id, codigo_turma, carga_horaria, valor, vagas, data_inicio, curso_id, instrutor_id)
-      VALUES(0, '', 0, 0, 0, '', 0, 0)
-      RETURNIN id;
+    const statementInsert = `
+      INSERT INTO public.turmas (
+        codigo_turma, carga_horaria, valor,
+        vagas, data_inicio, curso_id, instrutor_id
+      )
+      VALUES($1, $2, $3, $4, $5, $6, $7)
+      RETURNING id;
     `;
-    return turma;
+    const result = await this.database.one(statementInsert, [
+      turma.codigo_turma,
+      turma.carga_horaria,
+      turma.valor,
+      turma.vagas,
+      turma.data_inicio,
+      turma.curso_id,
+      turma.instrutor_id,
+    ]);
+
+    return {
+      id: result.id,
+      codigo_turma: turma.codigo_turma,
+      carga_horaria: turma.carga_horaria,
+      valor: turma.valor,
+      vagas: turma.vagas,
+      data_inicio: turma.data_inicio,
+      curso_id: turma.curso_id,
+      instrutor_id: turma.instrutor_id,
+    };
   }
 
   async getAll(): Promise<Turma[]> {

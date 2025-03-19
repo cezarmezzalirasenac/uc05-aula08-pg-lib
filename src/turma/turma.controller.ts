@@ -46,13 +46,13 @@ export class TurmaController {
       if (!instrutor) {
         res.status(404).send({
           error: true,
-          message: `Instrutor com id ${turma.curso_id} não encontrado`,
+          message: `Instrutor com id ${turma.instrutor_id} não encontrado`,
         });
         return;
       }
 
       const turmaWithId = await this.turmaService.create(turma);
-      res.status(201).send(turmaWithId)
+      res.status(201).send(turmaWithId);
     } catch (error) {
       console.log(error);
       res.status(500).send({ error: true, message: error });
