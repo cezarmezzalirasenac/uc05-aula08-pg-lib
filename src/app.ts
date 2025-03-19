@@ -3,7 +3,7 @@ import cors from "cors";
 import { AlunoRouter } from "./aluno/aluno.router";
 import { Database } from "./shared/database";
 import { InstrutorRouter } from "./instrutor/instrutor.router";
-
+import { CursoRouter } from "./curso/curso.router";
 
 class App {
   private readonly PORT = 3000;
@@ -30,9 +30,11 @@ class App {
 
     const alunoRouter = new AlunoRouter(this.database);
     const instrutorRouter = new InstrutorRouter(this.database);
+    const cursoRouter = new CursoRouter(this.database);
 
     this._app.use("/alunos", alunoRouter.getRouter());
     this._app.use("/instrutores", instrutorRouter.getRouter());
+    this._app.use("/cursos", cursoRouter.getRouter());
   }
 
   public start() {
