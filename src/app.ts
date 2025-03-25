@@ -17,6 +17,10 @@ import { InstrutorController } from "./instrutor/instrutor.controller";
 import { TurmaRepository } from "./turma/turma.repository";
 import { TurmaService } from "./turma/turma.service";
 import { TurmaController } from "./turma/turma.controller";
+import { MatriculaRepository } from "./matricula/matricula.repository";
+import { MatriculaService } from "./matricula/matricula.service";
+import { MatriculaController } from "./matricula/matricula.controller";
+import { MatriculaRouter } from "./matricula/matricula.router";
 
 class App {
   private readonly PORT = 3000;
@@ -64,15 +68,25 @@ class App {
       instrutorService
     );
 
+    const matriculaRepository = new MatriculaRepository(this.database);
+    const matriculaService = new MatriculaService(
+      matriculaRepository,
+      alunoRepository,
+      turmaRepository
+    );
+    const matriculaController = new MatriculaController(matriculaService);
+
     const alunoRouter = new AlunoRouter(alunoController);
     const cursoRouter = new CursoRouter(cursoController);
     const instrutorRouter = new InstrutorRouter(instrutorController);
     const turmaRouter = new TurmaRouter(turmaController);
+    const matriculaRouter = new MatriculaRouter(matriculaController);
 
     this._app.use("/alunos", alunoRouter.getRouter());
     this._app.use("/cursos", cursoRouter.getRouter());
     this._app.use("/instrutores", instrutorRouter.getRouter());
     this._app.use("/turmas", turmaRouter.getRouter());
+    this._app.use("/matriculas", matriculaRouter.getRouter());
   }
 
   public start() {

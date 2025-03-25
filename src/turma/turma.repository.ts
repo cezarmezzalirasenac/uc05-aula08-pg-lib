@@ -41,4 +41,25 @@ export class TurmaRepository {
   async getAll(): Promise<Turma[]> {
     return [] as Turma[];
   }
+
+  async getById(id: number): Promise<Turma | undefined> {
+    const [turma] = await this.database.query(
+      `select codigo_turma, carga_horaria, valor,
+        vagas, data_inicio, curso_id, instrutor_id
+         from turmas
+         where id = $1`,
+      [id]
+    );
+    if (!turma) return;
+    return {
+      id,
+      codigo_turma: turma.codigo_turma,
+      carga_horaria: turma.carga_horaria,
+      valor: turma.valor,
+      vagas: turma.vagas,
+      data_inicio: turma.data_inicio,
+      curso_id: turma.curso_id,
+      instrutor_id: turma.instrutor_id,
+    };
+  }
 }

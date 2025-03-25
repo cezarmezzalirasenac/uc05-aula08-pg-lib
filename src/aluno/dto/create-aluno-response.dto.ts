@@ -1,5 +1,4 @@
-export type Aluno = {
-  id?: number;
+export type CreateAlunoResponseDto = {
   nome: string;
   dataNascimento: Date;
   cpf: string;
@@ -7,6 +6,5 @@ export type Aluno = {
   sexo: string;
   email: string;
   escolaridade: string;
-  renda: number;
   pcd: boolean;
-};
+}
